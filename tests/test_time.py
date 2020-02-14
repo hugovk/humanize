@@ -23,7 +23,7 @@ ONE_DAY = 24 * ONE_HOUR
 ONE_YEAR = 365.25 * ONE_DAY
 
 with freeze_time("2020-02-02"):
-    TODAY = dt.date.today()
+    TODAY = dt.datetime.today()
     TOMORROW = TODAY + ONE_DAY_DELTA
     YESTERDAY = TODAY - ONE_DAY_DELTA
 
@@ -456,3 +456,65 @@ def test_naturaltime_minimum_unit_explicit(minimum_unit, seconds, expected):
 
     # Act / Assert
     assert time.naturaltime(delta, minimum_unit=minimum_unit) == expected
+
+
+@pytest.mark.parametrize(
+    "test_input, expected",
+    [
+        (TODAY.replace(hour=1, minute=0), "one o'clock"),
+        (TODAY.replace(hour=2, minute=0), "two o'clock"),
+        (TODAY.replace(hour=3, minute=0), "three o'clock"),
+        (TODAY.replace(hour=4, minute=0), "four o'clock"),
+        (TODAY.replace(hour=5, minute=0), "five o'clock"),
+        (TODAY.replace(hour=6, minute=0), "six o'clock"),
+        (TODAY.replace(hour=7, minute=0), "seven o'clock"),
+        (TODAY.replace(hour=8, minute=0), "eight o'clock"),
+        (TODAY.replace(hour=9, minute=0), "nine o'clock"),
+        (TODAY.replace(hour=10, minute=0), "10 o'clock"),
+        (TODAY.replace(hour=11, minute=0), "11 o'clock"),
+        (TODAY.replace(hour=12, minute=0), "noon"),
+        (TODAY.replace(hour=13, minute=0), "one o'clock"),
+        (TODAY.replace(hour=14, minute=0), "two o'clock"),
+        (TODAY.replace(hour=15, minute=0), "three o'clock"),
+        (TODAY.replace(hour=16, minute=0), "four o'clock"),
+        (TODAY.replace(hour=17, minute=0), "five o'clock"),
+        (TODAY.replace(hour=18, minute=0), "six o'clock"),
+        (TODAY.replace(hour=19, minute=0), "seven o'clock"),
+        (TODAY.replace(hour=20, minute=0), "eight o'clock"),
+        (TODAY.replace(hour=21, minute=0), "nine o'clock"),
+        (TODAY.replace(hour=22, minute=0), "10 o'clock"),
+        (TODAY.replace(hour=23, minute=0), "11 o'clock"),
+        (TODAY.replace(hour=0, minute=0), "midnight"),
+        (TODAY.replace(hour=1, minute=15), "quarter past one"),
+        (TODAY.replace(hour=1, minute=30), "half past one"),
+        (TODAY.replace(hour=1, minute=45), "quarter to two"),
+        (TODAY.replace(hour=22, minute=5), "five past 10"),
+        (TODAY.replace(hour=22, minute=10), "10 past 10"),
+        (TODAY.replace(hour=22, minute=20), "20 past 10"),
+        (TODAY.replace(hour=22, minute=25), "25 past 10"),
+        (TODAY.replace(hour=23, minute=35), "25 to midnight"),
+        (TODAY.replace(hour=23, minute=40), "20 to midnight"),
+        (TODAY.replace(hour=23, minute=50), "10 to midnight"),
+        (TODAY.replace(hour=23, minute=55), "five to midnight"),
+        (TODAY.replace(hour=6, minute=1), "six o'clock"),
+        (TODAY.replace(hour=6, minute=2), "six o'clock"),
+        (TODAY.replace(hour=6, minute=3), "five past six"),
+        (TODAY.replace(hour=6, minute=4), "five past six"),
+        (TODAY.replace(hour=6, minute=6), "five past six"),
+        (TODAY.replace(hour=6, minute=7), "five past six"),
+        (TODAY.replace(hour=6, minute=8), "10 past six"),
+        (TODAY.replace(hour=6, minute=9), "10 past six"),
+        (TODAY.replace(hour=6, minute=10), "10 past six"),
+        (TODAY.replace(hour=6, minute=12), "10 past six"),
+        (TODAY.replace(hour=6, minute=29), "half past six"),
+        (TODAY.replace(hour=6, minute=34), "25 to seven"),
+        (TODAY.replace(hour=6, minute=48), "10 to seven"),
+        (TODAY.replace(hour=6, minute=57), "five to seven"),
+        (TODAY.replace(hour=6, minute=58), "seven o'clock"),
+        (TODAY.replace(hour=6, minute=59), "seven o'clock"),
+        (None, TypeError),
+        ("Not a date at all.", TypeError),
+    ],
+)
+def test_naturalclock(test_input, expected):
+    assert time.naturalclock(test_input) == expected

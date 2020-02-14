@@ -115,6 +115,36 @@ def apnumber(value):
     )[value - 1]
 
 
+def hour(value):
+    """For hours 0-24, return midnight/noon or the hour in AP style"""
+    if value >= 25:
+        return ValueError
+    if value in [0, 24]:
+        return _("midnight")
+    if value == 12:
+        return _("noon")
+    if value >= 13:
+        value -= 12
+    return apnumber(value)
+
+
+def minute(value):
+    """For minutes ending in 0 and 5, return half/quarter or the minutes in AP style"""
+    if value in [5, 10]:
+        return apnumber(value)
+    if value in [50, 55]:
+        return apnumber(60 - value)
+    if value == 30:
+        return _("half")
+    if value in [15, 45]:
+        return _("quarter")
+    if value in [20, 40]:
+        return apnumber(20)
+    if value in [25, 35]:
+        return apnumber(25)
+    return ValueError
+
+
 def fractional(value):
     """
     There will be some cases where one might not want to show

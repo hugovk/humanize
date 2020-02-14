@@ -6,10 +6,12 @@
 import datetime as dt
 from enum import Enum
 
+from humanize import number
+
 from .i18n import gettext as _
 from .i18n import ngettext
 
-__all__ = ["naturaldelta", "naturaltime", "naturalday", "naturaldate"]
+__all__ = ["naturaldelta", "naturaltime", "naturalday", "naturaldate", "naturalclock"]
 
 
 class Unit(Enum):
@@ -144,7 +146,7 @@ def naturaltime(value, future=False, months=True, minimum_unit="seconds"):
     This is more or less compatible with Django's naturaltime filter.
 
     Args:
-        value: A timedate or a number of seconds.
+        value: A datetime or a number of seconds.
         future: Ignored for datetimes, where the tense is always figured out based on
             the current time. For integers, the return value will be past tense by
             default, unless future is True.
@@ -210,3 +212,39 @@ def naturaldate(value):
     if delta.days >= 5 * 365 / 12:
         return naturalday(value, "%b %d %Y")
     return naturalday(value)
+
+
+def naturalclock(value):
+    """Return the clock time as a string.
+
+    The time is given for the nearest five minutes.
+
+    Args:
+        value: A datetime.
+
+    Returns:
+        A string such as "six o'clock", "10 past three", "quarter to nine".
+    """
+    try:
+        hour = value.hour
+        minute = value.minute
+    except AttributeError:
+        return TypeError
+
+    if minute % 5 in [1, 2]:
+        minute -= minute % 5
+    elif minute % 5 in [3, 4]:
+        minute = minute - minute % 5 + 5
+
+    if minute == 60:
+        minute = 0
+        hour += 1
+
+    if minute == 0:
+        if hour in [0, 12]:
+            return number.hour(hour)
+        return number.hour(hour) + " o'clock"
+    elif minute in [5, 10, 15, 20, 25, 30]:
+        return _("%s past %s") % (number.minute(minute), number.hour(hour))
+    elif minute in [35, 40, 45, 50, 55]:
+        return _("%s to %s") % (number.minute(minute), number.hour(hour + 1))

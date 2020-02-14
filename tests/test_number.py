@@ -109,3 +109,44 @@ def test_apnumber(test_input, expected):
 )
 def test_fractional(test_input, expected):
     assert number.fractional(test_input) == expected
+
+
+@pytest.mark.parametrize(
+    "test_input, expected",
+    [
+        (0, "midnight"),
+        (1, "one"),
+        (9, "nine"),
+        (10, "10"),
+        (11, "11"),
+        (12, "noon"),
+        (13, "one"),
+        (23, "11"),
+        (24, "midnight"),
+        (25, ValueError),
+    ],
+)
+def test_hour(test_input, expected):
+    assert number.hour(test_input) == expected
+
+
+@pytest.mark.parametrize(
+    "test_input, expected",
+    [
+        (0, ValueError),
+        (5, "five"),
+        (10, "10"),
+        (15, "quarter"),
+        (20, "20"),
+        (25, "25"),
+        (30, "half"),
+        (35, "25"),
+        (40, "20"),
+        (45, "quarter"),
+        (50, "10"),
+        (55, "five"),
+        (60, ValueError),
+    ],
+)
+def test_minute(test_input, expected):
+    assert number.minute(test_input) == expected
