@@ -2,7 +2,13 @@ import pkg_resources
 from humanize.filesize import naturalsize
 from humanize.i18n import activate, deactivate
 from humanize.number import apnumber, fractional, intcomma, intword, ordinal, scientific
-from humanize.time import naturaldate, naturalday, naturaldelta, naturaltime
+from humanize.time import (
+    format_timedelta,
+    naturaldate,
+    naturalday,
+    naturaldelta,
+    naturaltime,
+)
 
 __version__ = VERSION = pkg_resources.get_distribution(__name__).version
 
@@ -12,6 +18,7 @@ __all__ = [
     "activate",
     "apnumber",
     "deactivate",
+    "format_timedelta",
     "fractional",
     "intcomma",
     "intword",
