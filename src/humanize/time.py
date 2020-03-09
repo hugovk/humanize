@@ -218,7 +218,7 @@ def naturaldate(value):
     return naturalday(value)
 
 
-def english_list(list_, empty="nothing", key=str, sep=", ", and_="and "):
+def _join_time_parts(list_, empty="nothing", key=str, sep=", ", and_="and "):
     """Return a decently-formatted list."""
     list_ = [key(x) for x in list_]
     if not list_:
@@ -269,4 +269,4 @@ def format_timedelta(
         fmt.append("%d %s" % (minutes, "minute" if minutes == 1 else "minutes"))
     if seconds and show_seconds:
         fmt.append("%.2f seconds" % seconds)
-    return english_list(fmt)
+    return _join_time_parts(fmt)
