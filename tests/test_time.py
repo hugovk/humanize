@@ -376,3 +376,51 @@ def test_naturaltime_minimum_unit_explicit(minimum_unit, seconds, expected):
 
     # Act / Assert
     assert humanize.naturaltime(delta, minimum_unit=minimum_unit) == expected
+
+
+@pytest.mark.parametrize(
+    "test_args, expected",
+    [
+        ([dt.timedelta(seconds=30)], "30.00 seconds"),
+        ([dt.timedelta(seconds=30), True, True, True, True, True, False], "nothing"),
+        ([dt.timedelta(minutes=1, seconds=30)], "1 minute, and 30.00 seconds"),
+        (
+            [dt.timedelta(minutes=1, seconds=30), True, True, True, True, False],
+            "30.00 seconds",
+        ),
+        (
+            [dt.timedelta(minutes=1, seconds=30), True, True, True, True, True, False],
+            "1 minute",
+        ),
+        (
+            [dt.timedelta(hours=3, minutes=1, seconds=30)],
+            "3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=6, hours=3, minutes=1, seconds=30)],
+            "6 days, 3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=6, hours=3, minutes=1, seconds=30), True, True, False],
+            "3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=30 + 6, hours=3, minutes=1, seconds=30)],
+            "1 month, 6 days, 3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=30 + 6, hours=3, minutes=1, seconds=30), True, False],
+            "6 days, 3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=365 + 30 + 6, hours=3, minutes=1, seconds=30)],
+            "1 year, 1 month, 6 days, 3 hours, 1 minute, and 30.00 seconds",
+        ),
+        (
+            [dt.timedelta(days=365 + 30 + 6, hours=3, minutes=1, seconds=30), False],
+            "1 month, 6 days, 3 hours, 1 minute, and 30.00 seconds",
+        ),
+    ],
+)
+def test_format_timedelta(test_args, expected):
+    assert humanize.format_timedelta(*test_args) == expected
