@@ -70,7 +70,7 @@ def test_date_and_delta_nan():
 # Tests for the public interface of humanize.time
 
 
-def nd_nomonths(d):
+def nd_no_months(d):
     return humanize.naturaldelta(d, months=False)
 
 
@@ -83,8 +83,8 @@ def nd_nomonths(d):
         (dt.timedelta(days=400), "1 year, 35 days"),
     ],
 )
-def test_naturaldelta_nomonths(test_input, expected):
-    assert nd_nomonths(test_input) == expected
+def test_naturaldelta_no_months(test_input, expected):
+    assert nd_no_months(test_input) == expected
 
 
 @pytest.mark.parametrize(
@@ -162,7 +162,7 @@ def test_naturaltime(test_input, expected):
     assert humanize.naturaltime(test_input) == expected
 
 
-def nt_nomonths(d):
+def nt_no_months(d):
     return humanize.naturaltime(d, months=False)
 
 
@@ -200,8 +200,8 @@ def nt_nomonths(d):
         ("NaN", "NaN"),
     ],
 )
-def test_naturaltime_nomonths(test_input, expected):
-    assert nt_nomonths(test_input) == expected
+def test_naturaltime_no_months(test_input, expected):
+    assert nt_no_months(test_input) == expected
 
 
 @freeze_time("2020-02-02")
