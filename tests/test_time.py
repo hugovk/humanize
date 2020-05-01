@@ -48,18 +48,22 @@ def assertEqualTimedelta(td1, td2):
 # These are not considered "public" interfaces, but require tests anyway.
 
 
-def test_date_and_delta():
+@pytest.mark.parametrize(
+    "test_input", [3, 29, 86399, 86400, 86401 * 30],
+)
+def test_date_and_delta(test_input):
     now = dt.datetime.now()
     td = dt.timedelta
-    int_tests = (3, 29, 86399, 86400, 86401 * 30)
-    date_tests = [now - td(seconds=x) for x in int_tests]
-    td_tests = [td(seconds=x) for x in int_tests]
-    results = [(now - td(seconds=x), td(seconds=x)) for x in int_tests]
-    for t in (int_tests, date_tests, td_tests):
-        for arg, result in zip(t, results):
-            date, d = time.date_and_delta(arg)
-            assertEqualDatetime(date, result[0])
-            assertEqualTimedelta(d, result[1])
+    test_date = now - td(seconds=test_input)
+    test_timedelta = td(seconds=test_input)
+
+    for test in (test_input, test_date, test_timedelta):
+        date, delta = time.date_and_delta(test)
+        assertEqualDatetime(date, test_date)
+        assertEqualTimedelta(delta, test_timedelta)
+
+
+def test_date_and_delta_nan():
     assert time.date_and_delta("NaN") == (None, "NaN")
 
 
