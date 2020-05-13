@@ -9,13 +9,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { python-version: 3.6, os: ubuntu-latest, TOXENV: py }
-          - { python-version: 3.7, os: ubuntu-latest, TOXENV: py }
-          - { python-version: 3.8, os: ubuntu-latest, TOXENV: py }
-          - { python-version: 3.8, os: ubuntu-latest, TOXENV: style }
-          - { python-version: 3.8, os: ubuntu-latest, TOXENV: docs }
-          - { python-version: 3.8, os: windows-latest, TOXENV: py }
-          - { python-version: 3.7, os: macos-latest, TOXENV: py }
+          - { python-version: 3.6, os: ubuntu-latest, toxenv: py }
+          - { python-version: 3.7, os: ubuntu-latest, toxenv: py }
+          - { python-version: 3.8, os: ubuntu-latest, toxenv: py }
+          - { python-version: 3.8, os: ubuntu-latest, toxenv: style }
+          - { python-version: 3.8, os: ubuntu-latest, toxenv: docs }
+          - { python-version: 3.8, os: windows-latest, toxenv: py }
+          - { python-version: 3.7, os: macos-latest, toxenv: py }
 
 #  3.8 Linux py
 #  3.7 Linux py
@@ -54,10 +54,12 @@ jobs:
           python -m pip install -U wheel
           python -m pip install -U tox
 
-      - name: Test with tox ${{ matrix.env.TOXENV }}
+      - name: Test with tox ${{ matrix.toxenv }}
         shell: bash
         run: |
           tox
+        env:
+          TOXENV: ${{ matrix.toxenv }}
 
       - name: Upload coverage
         if: success()
