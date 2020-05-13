@@ -8,16 +8,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["pypy3", "3.5", "3.6", "3.7", "3.8", "3.9"]
+        python-version: ["3.6", "3.7", "3.8"]
         os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          # Include new variables for Codecov
-          - { codecov-flag: GHA_Ubuntu, os: ubuntu-latest }
-          - { codecov-flag: GHA_macOS, os: macos-latest }
-          - { codecov-flag: GHA_Windows, os: windows-latest }
+        toxenv: [py, style, docs]
         exclude:
-          - { python-version: 3.9, os: macos-latest }
-          - { python-version: 3.9, os: windows-latest }
+          - { toxenv: style, os: macos-latest }
+          - { toxenv: style, os: windows-latest }
+          - { toxenv: docs, os: macos-latest }
+          - { toxenv: docs, os: windows-latest }
+          - { python-version: 3.6, os: macos-latest }
+          - { python-version: 3.8, os: macos-latest }
+          - { python-version: 3.6, os: windows-latest }
+          - { python-version: 3.7, os: windows-latest }
+
+#  3.8 Linux py
+#  3.7 Linux py
+#  3.6 Linux py
+#  3.8 Linux style
+#  3.8 Linux docs
+#  3.8 Windows py
+#  3.7 Mac py
 
     steps:
       - uses: actions/checkout@v2
