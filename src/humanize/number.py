@@ -173,7 +173,17 @@ def intcomma(value: NumberOrString, ndigits: int | None = None) -> str:
         orig = new
 
 
-powers = [10**x for x in (3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 100)]
+powers = [
+    10**x
+    for x in (
+        # fmt: off
+        3,   6,  9, 12, 15, 18, 21, 24, 27, 30,
+        33, 36, 39, 42, 45, 48, 51, 54, 57, 60,
+        63, 66, 69, 72, 75, 78, 81, 84, 87, 90,
+        93, 96, 99, 100,
+        # fmt: on
+    )
+]
 human_powers = (
     NS_("thousand", "thousand"),
     NS_("million", "million"),
@@ -186,6 +196,28 @@ human_powers = (
     NS_("octillion", "octillion"),
     NS_("nonillion", "nonillion"),
     NS_("decillion", "decillion"),
+    NS_("undecillion", "undecillion"),
+    NS_("duodecillion", "duodecillion"),
+    NS_("tredecillion", "tredecillion"),
+    NS_("quattuordecillion", "quattuordecillion"),
+    NS_("quindecillion", "quindecillion"),
+    NS_("hexdecillion", "hexdecillion"),
+    NS_("septendecillion", "septendecillion"),
+    NS_("octodecillion", "octodecillion"),
+    NS_("novemdecillion", "novemdecillion"),
+    NS_("vigintillion", "vigintillion"),
+    NS_("unvigintillion", "unvigintillion"),
+    NS_("duovigintillion", "duovigintillion"),
+    NS_("trevigintillion", "trevigintillion"),
+    NS_("quattourvigintillion", "quattourvigintillion"),
+    NS_("quinvigintillion", "quinvigintillion"),
+    NS_("hexvigintillion", "hexvigintillion"),
+    NS_("septenvigintillion", "septenvigintillion"),
+    NS_("octovigintillion", "octovigintillion"),
+    NS_("novemvigintillion", "novemvigintillion"),
+    NS_("trigintillion", "trigintillion"),
+    NS_("untrigintillion", "untrigintillion"),
+    NS_("duotrigintillion", "duotrigintillion"),
     NS_("googol", "googol"),
 )
 
