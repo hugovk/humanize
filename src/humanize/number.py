@@ -5,7 +5,7 @@ import math
 import re
 import sys
 from fractions import Fraction
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated, doc
 
 from .i18n import _gettext as _
 from .i18n import _ngettext
@@ -35,7 +35,12 @@ def _format_not_finite(value: float) -> str:
     return ""
 
 
-def ordinal(value: NumberOrString, gender: str = "male") -> str:
+def ordinal(
+    value: Annotated[NumberOrString, doc("Integer to convert.")],
+    gender: Annotated[
+        str, doc('Gender for translations. Accepts either "male" or "female".')
+    ] = "male",
+) -> str:
     """Converts an integer to its ordinal as a string.
 
     For example, 1 is "1st", 2 is "2nd", 3 is "3rd", etc. Works for any integer or
@@ -64,10 +69,6 @@ def ordinal(value: NumberOrString, gender: str = "male") -> str:
         True
 
         ```
-    Args:
-        value (int, str, float): Integer to convert.
-        gender (str): Gender for translations. Accepts either "male" or "female".
-
     Returns:
         str: Ordinal string.
     """
@@ -108,7 +109,12 @@ def ordinal(value: NumberOrString, gender: str = "male") -> str:
     return f"{value}{t[value % 10]}"
 
 
-def intcomma(value: NumberOrString, ndigits: int | None = None) -> str:
+def intcomma(
+    value: Annotated[NumberOrString, doc("Integer or float to convert.")],
+    ndigits: Annotated[
+        int | None, doc("Digits of precision for rounding after the decimal point.")
+    ] = None,
+) -> str:
     """Converts an integer to a string containing commas every three digits.
 
     For example, 3000 becomes "3,000" and 45000 becomes "45,000". To maintain some
@@ -134,10 +140,6 @@ def intcomma(value: NumberOrString, ndigits: int | None = None) -> str:
         'None'
 
         ```
-    Args:
-        value (int, float, str): Integer or float to convert.
-        ndigits (int, None): Digits of precision for rounding after the decimal point.
-
     Returns:
         str: String containing commas every three digits.
     """
@@ -188,7 +190,13 @@ human_powers = (
 )
 
 
-def intword(value: NumberOrString, format: str = "%.1f") -> str:
+def intword(
+    value: Annotated[NumberOrString, doc("Integer to convert.")],
+    format: Annotated[
+        str,
+        doc("To change the number of decimal or general format of the number portion."),
+    ] = "%.1f",
+) -> str:
     """Converts a large integer to a friendly text representation.
 
     Works best for numbers over 1 million. For example, 1_000_000 becomes "1.0 million",
@@ -213,11 +221,6 @@ def intword(value: NumberOrString, format: str = "%.1f") -> str:
         '1.234 million'
 
         ```
-    Args:
-        value (int, float, str): Integer to convert.
-        format (str): To change the number of decimal or general format of the number
-            portion.
-
     Returns:
         str: Friendly text representation as a string, unless the value passed could not
             be coaxed into an `int`.
@@ -261,7 +264,7 @@ def intword(value: NumberOrString, format: str = "%.1f") -> str:
     return negative_prefix + str(value)
 
 
-def apnumber(value: NumberOrString) -> str:
+def apnumber(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> str:
     """Converts an integer to Associated Press style.
 
     Examples:
@@ -280,9 +283,6 @@ def apnumber(value: NumberOrString) -> str:
       'None'
 
       ```
-    Args:
-        value (int, float, str): Integer to convert.
-
     Returns:
         str: For numbers 0-9, the number spelled out. Otherwise, the number. This always
             returns a string unless the value was not `int`-able, then `str(value)`
@@ -310,7 +310,7 @@ def apnumber(value: NumberOrString) -> str:
     )[value]
 
 
-def fractional(value: NumberOrString) -> str:
+def fractional(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> str:
     """Convert to fractional number.
 
     There will be some cases where one might not want to show ugly decimal places for
@@ -342,9 +342,6 @@ def fractional(value: NumberOrString) -> str:
         'None'
 
         ```
-    Args:
-        value (int, float, str): Integer to convert.
-
     Returns:
         str: Fractional number as a string.
     """
@@ -369,7 +366,12 @@ def fractional(value: NumberOrString) -> str:
     return f"{whole_number:.0f} {numerator:.0f}/{denominator:.0f}"
 
 
-def scientific(value: NumberOrString, precision: int = 2) -> str:
+def scientific(
+    value: Annotated[NumberOrString, doc("Input number.")],
+    precision: Annotated[
+        int, doc("Number of decimal for first part of the number.")
+    ] = 2,
+) -> str:
     """Return number in string scientific notation z.wq x 10ⁿ.
 
     Examples:
@@ -392,10 +394,6 @@ def scientific(value: NumberOrString, precision: int = 2) -> str:
         'None'
 
         ```
-
-    Args:
-        value (int, float, str): Input number.
-        precision (int): Number of decimal for first part of the number.
 
     Returns:
         str: Number in scientific notation z.wq x 10ⁿ.
@@ -435,12 +433,22 @@ def scientific(value: NumberOrString, precision: int = 2) -> str:
 
 
 def clamp(
-    value: float,
-    format: str = "{:}",
-    floor: float | None = None,
-    ceil: float | None = None,
-    floor_token: str = "<",
-    ceil_token: str = ">",
+    value: Annotated[float, doc("Input number.")],
+    format: Annotated[
+        str,
+        doc(
+            "Can either be a formatting string, "
+            "or a callable function that receives value and returns a string."
+        ),
+    ] = "{:}",
+    floor: Annotated[float | None, doc("Smallest value before clamping.")] = None,
+    ceil: Annotated[float | None, doc("Largest value before clamping.")] = None,
+    floor_token: Annotated[
+        str, doc("If value is smaller than floor, token will be prepended to output.")
+    ] = "<",
+    ceil_token: Annotated[
+        str, doc("If value is larger than ceil, token will be prepended to output.")
+    ] = ">",
 ) -> str:
     """Returns number with the specified format, clamped between floor and ceil.
 
@@ -463,17 +471,6 @@ def clamp(
         True
 
         ```
-
-    Args:
-        value (int, float): Input number.
-        format (str OR callable): Can either be a formatting string, or a callable
-            function that receives value and returns a string.
-        floor (int, float): Smallest value before clamping.
-        ceil (int, float): Largest value before clamping.
-        floor_token (str): If value is smaller than floor, token will be prepended
-            to output.
-        ceil_token (str): If value is larger than ceil, token will be prepended
-            to output.
 
     Returns:
         str: Formatted number. The output is clamped between the indicated floor and
@@ -509,7 +506,13 @@ def clamp(
     raise ValueError(msg)
 
 
-def metric(value: float, unit: str = "", precision: int = 3) -> str:
+def metric(
+    value: Annotated[float, doc("Input number.")],
+    unit: Annotated[str, doc("Optional base unit.")] = "",
+    precision: Annotated[
+        int, doc("The number of digits the output should contain.")
+    ] = 3,
+) -> str:
     """Return a value with a metric SI unit-prefix appended.
 
     Examples:
@@ -535,11 +538,6 @@ def metric(value: float, unit: str = "", precision: int = 3) -> str:
     '1.00 x 10⁴⁰'
 
     ```
-
-    Args:
-        value (int, float): Input number.
-        unit (str): Optional base unit.
-        precision (int): The number of digits the output should contain.
 
     Returns:
         str:

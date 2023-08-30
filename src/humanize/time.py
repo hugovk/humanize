@@ -10,7 +10,7 @@ import math
 import typing
 from enum import Enum
 from functools import total_ordering
-from typing import Any
+from typing import Annotated, Any, doc
 
 from .i18n import _gettext as _
 from .i18n import _ngettext
@@ -46,11 +46,10 @@ def _now() -> dt.datetime:
     return dt.datetime.now()
 
 
-def _abs_timedelta(delta: dt.timedelta) -> dt.timedelta:
+def _abs_timedelta(
+    delta: Annotated[dt.timedelta, doc("Input timedelta")]
+) -> dt.timedelta:
     """Return an "absolute" value for a timedelta, always representing a time distance.
-
-    Args:
-        delta (datetime.timedelta): Input timedelta.
 
     Returns:
         datetime.timedelta: Absolute timedelta.
@@ -87,19 +86,19 @@ def _date_and_delta(
 
 
 def naturaldelta(
-    value: dt.timedelta | float,
-    months: bool = True,
-    minimum_unit: str = "seconds",
+    value: Annotated[dt.timedelta | float, doc("A timedelta or a number of seconds.")],
+    months: Annotated[
+        bool,
+        doc(
+            "If `True`, then a number of months (based on 30.5 days) "
+            "will be used for fuzziness between years."
+        ),
+    ] = True,
+    minimum_unit: Annotated[str, doc("The lowest unit that can be used")] = "seconds",
 ) -> str:
     """Return a natural representation of a timedelta or number of seconds.
 
     This is similar to `naturaltime`, but does not add tense to the result.
-
-    Args:
-        value (datetime.timedelta, int or float): A timedelta or a number of seconds.
-        months (bool): If `True`, then a number of months (based on 30.5 days) will be
-            used for fuzziness between years.
-        minimum_unit (str): The lowest unit that can be used.
 
     Returns:
         str (str or `value`): A natural representation of the amount of time
@@ -219,27 +218,37 @@ def naturaldelta(
 
 
 def naturaltime(
-    value: dt.datetime | dt.timedelta | float,
-    future: bool = False,
-    months: bool = True,
-    minimum_unit: str = "seconds",
-    when: dt.datetime | None = None,
+    value: Annotated[
+        dt.datetime | dt.timedelta | float,
+        doc("A `datetime`, a `timedelta`, or a number of seconds."),
+    ],
+    future: Annotated[
+        bool,
+        doc(
+            "Ignored for `datetime`s and `timedelta`s, where the tense is always "
+            "figured out based on the current  time. For integers and floats, the "
+            "return value will be past tense by default, unless future is `True`."
+        ),
+    ] = False,
+    months: Annotated[
+        bool,
+        doc(
+            "If `True`, then a number of months (based on 30.5 days) "
+            "will be used for fuzziness between years."
+        ),
+    ] = True,
+    minimum_unit: Annotated[str, doc("The lowest unit that can be used.")] = "seconds",
+    when: Annotated[
+        dt.datetime | None,
+        doc(
+            "Point in time relative to which _value_ is interpreted. "
+            "Defaults to the current time in the local timezone."
+        ),
+    ] = None,
 ) -> str:
     """Return a natural representation of a time in a resolution that makes sense.
 
     This is more or less compatible with Django's `naturaltime` filter.
-
-    Args:
-        value (datetime.datetime, datetime.timedelta, int or float): A `datetime`, a
-            `timedelta`, or a number of seconds.
-        future (bool): Ignored for `datetime`s and `timedelta`s, where the tense is
-            always figured out based on the current time. For integers and floats, the
-            return value will be past tense by default, unless future is `True`.
-        months (bool): If `True`, then a number of months (based on 30.5 days) will be
-            used for fuzziness between years.
-        minimum_unit (str): The lowest unit that can be used.
-        when (datetime.datetime): Point in time relative to which _value_ is
-            interpreted.  Defaults to the current time in the local timezone.
 
     Returns:
         str: A natural representation of the input in a resolution that makes sense.

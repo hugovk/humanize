@@ -4,6 +4,7 @@ from __future__ import annotations
 import gettext as gettext_module
 import os.path
 from threading import local
+from typing import Annotated, doc
 
 __all__ = ["activate", "deactivate", "decimal_separator", "thousands_separator"]
 
@@ -47,14 +48,13 @@ def get_translation() -> gettext_module.NullTranslations:
         return _TRANSLATIONS[None]
 
 
-def activate(locale: str, path: str | None = None) -> gettext_module.NullTranslations:
+def activate(
+    locale: Annotated[str, doc("Language name, e.g. `en_GB`.")],
+    path: Annotated[str | None, doc("Path to search for locales.")] = None,
+) -> gettext_module.NullTranslations:
     """Activate internationalisation.
 
     Set `locale` as current locale. Search for locale in directory `path`.
-
-    Args:
-        locale (str): Language name, e.g. `en_GB`.
-        path (str): Path to search for locales.
 
     Returns:
         dict: Translations.
@@ -83,11 +83,8 @@ def deactivate() -> None:
     _CURRENT.locale = None
 
 
-def _gettext(message: str) -> str:
+def _gettext(message: Annotated[str, doc("Text to translate.")]) -> str:
     """Get translation.
-
-    Args:
-        message (str): Text to translate.
 
     Returns:
         str: Translated text.
@@ -95,15 +92,14 @@ def _gettext(message: str) -> str:
     return get_translation().gettext(message)
 
 
-def _pgettext(msgctxt: str, message: str) -> str:
+def _pgettext(
+    msgctxt: Annotated[str, doc("Context of the translation.")],
+    message: Annotated[str, doc("Text to translate.")],
+) -> str:
     """Fetches a particular translation.
 
     It works with `msgctxt` .po modifiers and allows duplicate keys with different
     translations.
-
-    Args:
-        msgctxt (str): Context of the translation.
-        message (str): Text to translate.
 
     Returns:
         str: Translated text.
@@ -111,14 +107,18 @@ def _pgettext(msgctxt: str, message: str) -> str:
     return get_translation().pgettext(msgctxt, message)
 
 
-def _ngettext(message: str, plural: str, num: int) -> str:
+def _ngettext(
+    message: Annotated[str, doc("Singular text to translate.")],
+    plural: Annotated[str, doc("Plural text to translate.")],
+    num: Annotated[
+        int,
+        doc(
+            "The number (e.g. item count) to determine translation "
+            "for the respective grammatical number."
+        ),
+    ],
+) -> str:
     """Plural version of _gettext.
-
-    Args:
-        message (str): Singular text to translate.
-        plural (str): Plural text to translate.
-        num (int): The number (e.g. item count) to determine translation for the
-            respective grammatical number.
 
     Returns:
         str: Translated text.
@@ -126,7 +126,9 @@ def _ngettext(message: str, plural: str, num: int) -> str:
     return get_translation().ngettext(message, plural, num)
 
 
-def _gettext_noop(message: str) -> str:
+def _gettext_noop(
+    message: Annotated[str, doc("Text to translate in the future.")]
+) -> str:
     """Mark a string as a translation string without translating it.
 
     Example usage:
@@ -136,16 +138,16 @@ def _gettext_noop(message: str) -> str:
         return _gettext(CONSTANTS[n])
     ```
 
-    Args:
-        message (str): Text to translate in the future.
-
     Returns:
         str: Original text, unchanged.
     """
     return message
 
 
-def _ngettext_noop(singular: str, plural: str) -> tuple[str, str]:
+def _ngettext_noop(
+    singular: Annotated[str, doc("Singular text to translate in the future.")],
+    plural: Annotated[str, doc("Plural text to translate in the future.")],
+) -> tuple[str, str]:
     """Mark two strings as pluralized translations without translating them.
 
     Example usage:
@@ -154,10 +156,6 @@ def _ngettext_noop(singular: str, plural: str) -> tuple[str, str]:
     def num_name(n):
         return _ngettext(*CONSTANTS[n])
     ```
-
-    Args:
-        singular (str): Singular text to translate in the future.
-        plural (str): Plural text to translate in the future.
 
     Returns:
         tuple: Original text, unchanged.

@@ -3,6 +3,8 @@
 """Bits and bytes related humanization."""
 from __future__ import annotations
 
+from typing import Annotated, doc
+
 suffixes = {
     "decimal": (" kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"),
     "binary": (" KiB", " MiB", " GiB", " TiB", " PiB", " EiB", " ZiB", " YiB"),
@@ -11,10 +13,22 @@ suffixes = {
 
 
 def naturalsize(
-    value: float | str,
-    binary: bool = False,
-    gnu: bool = False,
-    format: str = "%.1f",
+    value: Annotated[float | str, doc("Integer to convert.")],
+    binary: Annotated[
+        bool,
+        doc(
+            "If `True`, uses binary suffixes (KiB, MiB) with "
+            "base 2<sup>10</sup> instead of 10<sup>3</sup>."
+        ),
+    ] = False,
+    gnu: Annotated[
+        bool,
+        doc(
+            "If `True`, the binary argument is ignored and GNU-style (`ls -sh` style) "
+            "prefixes are used (K, M) with the 2**10 definition."
+        ),
+    ] = False,
+    format: Annotated[str, doc("Custom formatter.")] = "%.1f",
 ) -> str:
     """Format a number of bytes like a human readable filesize (e.g. 10 kB).
 
@@ -40,14 +54,6 @@ def naturalsize(
         '-4.0 KiB'
 
         ```
-    Args:
-        value (int, float, str): Integer to convert.
-        binary (bool): If `True`, uses binary suffixes (KiB, MiB) with base
-            2<sup>10</sup> instead of 10<sup>3</sup>.
-        gnu (bool): If `True`, the binary argument is ignored and GNU-style
-            (`ls -sh` style) prefixes are used (K, M) with the 2**10 definition.
-        format (str): Custom formatter.
-
     Returns:
         str: Human readable representation of a filesize.
     """
