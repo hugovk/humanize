@@ -3,7 +3,13 @@
 """Bits and bytes related humanization."""
 from __future__ import annotations
 
-from typing import Annotated, doc
+try:
+    from typing import Annotated, Doc  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import (  # type: ignore[attr-defined,assignment]
+        Annotated,
+        Doc,
+    )
 
 suffixes = {
     "decimal": (" kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"),
@@ -13,22 +19,22 @@ suffixes = {
 
 
 def naturalsize(
-    value: Annotated[float | str, doc("Integer to convert.")],
+    value: Annotated[float | str, Doc("Integer to convert.")],
     binary: Annotated[
         bool,
-        doc(
+        Doc(
             "If `True`, uses binary suffixes (KiB, MiB) with "
             "base 2<sup>10</sup> instead of 10<sup>3</sup>."
         ),
     ] = False,
     gnu: Annotated[
         bool,
-        doc(
+        Doc(
             "If `True`, the binary argument is ignored and GNU-style (`ls -sh` style) "
             "prefixes are used (K, M) with the 2**10 definition."
         ),
     ] = False,
-    format: Annotated[str, doc("Custom formatter.")] = "%.1f",
+    format: Annotated[str, Doc("Custom formatter.")] = "%.1f",
 ) -> str:
     """Format a number of bytes like a human readable filesize (e.g. 10 kB).
 

@@ -66,7 +66,7 @@ repos:
     rev: v1.5.0
     hooks:
       - id: mypy
-        additional_dependencies: [pytest, types-freezegun, types-setuptools]
+        additional_dependencies: [pytest, types-freezegun, types-setuptools, typing-extensions>=4.8.0]
         args: [--strict, --pretty, --show-error-codes]
 
   - repo: https://github.com/tox-dev/pyproject-fmt

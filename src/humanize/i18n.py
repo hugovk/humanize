@@ -4,7 +4,14 @@ from __future__ import annotations
 import gettext as gettext_module
 import os.path
 from threading import local
-from typing import Annotated, doc
+
+try:
+    from typing import Annotated, Doc  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import (  # type: ignore[attr-defined,assignment]
+        Annotated,
+        Doc,
+    )
 
 __all__ = ["activate", "deactivate", "decimal_separator", "thousands_separator"]
 
@@ -49,8 +56,8 @@ def get_translation() -> gettext_module.NullTranslations:
 
 
 def activate(
-    locale: Annotated[str, doc("Language name, e.g. `en_GB`.")],
-    path: Annotated[str | None, doc("Path to search for locales.")] = None,
+    locale: Annotated[str, Doc("Language name, e.g. `en_GB`.")],
+    path: Annotated[str | None, Doc("Path to search for locales.")] = None,
 ) -> gettext_module.NullTranslations:
     """Activate internationalisation.
 
@@ -83,7 +90,7 @@ def deactivate() -> None:
     _CURRENT.locale = None
 
 
-def _gettext(message: Annotated[str, doc("Text to translate.")]) -> str:
+def _gettext(message: Annotated[str, Doc("Text to translate.")]) -> str:
     """Get translation.
 
     Returns:
@@ -93,8 +100,8 @@ def _gettext(message: Annotated[str, doc("Text to translate.")]) -> str:
 
 
 def _pgettext(
-    msgctxt: Annotated[str, doc("Context of the translation.")],
-    message: Annotated[str, doc("Text to translate.")],
+    msgctxt: Annotated[str, Doc("Context of the translation.")],
+    message: Annotated[str, Doc("Text to translate.")],
 ) -> str:
     """Fetches a particular translation.
 
@@ -108,11 +115,11 @@ def _pgettext(
 
 
 def _ngettext(
-    message: Annotated[str, doc("Singular text to translate.")],
-    plural: Annotated[str, doc("Plural text to translate.")],
+    message: Annotated[str, Doc("Singular text to translate.")],
+    plural: Annotated[str, Doc("Plural text to translate.")],
     num: Annotated[
         int,
-        doc(
+        Doc(
             "The number (e.g. item count) to determine translation "
             "for the respective grammatical number."
         ),
@@ -127,7 +134,7 @@ def _ngettext(
 
 
 def _gettext_noop(
-    message: Annotated[str, doc("Text to translate in the future.")]
+    message: Annotated[str, Doc("Text to translate in the future.")]
 ) -> str:
     """Mark a string as a translation string without translating it.
 
@@ -145,8 +152,8 @@ def _gettext_noop(
 
 
 def _ngettext_noop(
-    singular: Annotated[str, doc("Singular text to translate in the future.")],
-    plural: Annotated[str, doc("Plural text to translate in the future.")],
+    singular: Annotated[str, Doc("Singular text to translate in the future.")],
+    plural: Annotated[str, Doc("Plural text to translate in the future.")],
 ) -> tuple[str, str]:
     """Mark two strings as pluralized translations without translating them.
 

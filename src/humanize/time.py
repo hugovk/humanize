@@ -10,7 +10,15 @@ import math
 import typing
 from enum import Enum
 from functools import total_ordering
-from typing import Annotated, Any, doc
+from typing import Any
+
+try:
+    from typing import Annotated, Doc  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import (  # type: ignore[attr-defined,assignment]
+        Annotated,
+        Doc,
+    )
 
 from .i18n import _gettext as _
 from .i18n import _ngettext
@@ -47,7 +55,7 @@ def _now() -> dt.datetime:
 
 
 def _abs_timedelta(
-    delta: Annotated[dt.timedelta, doc("Input timedelta")]
+    delta: Annotated[dt.timedelta, Doc("Input timedelta")]
 ) -> dt.timedelta:
     """Return an "absolute" value for a timedelta, always representing a time distance.
 
@@ -86,15 +94,15 @@ def _date_and_delta(
 
 
 def naturaldelta(
-    value: Annotated[dt.timedelta | float, doc("A timedelta or a number of seconds.")],
+    value: Annotated[dt.timedelta | float, Doc("A timedelta or a number of seconds.")],
     months: Annotated[
         bool,
-        doc(
+        Doc(
             "If `True`, then a number of months (based on 30.5 days) "
             "will be used for fuzziness between years."
         ),
     ] = True,
-    minimum_unit: Annotated[str, doc("The lowest unit that can be used")] = "seconds",
+    minimum_unit: Annotated[str, Doc("The lowest unit that can be used")] = "seconds",
 ) -> str:
     """Return a natural representation of a timedelta or number of seconds.
 
@@ -220,11 +228,11 @@ def naturaldelta(
 def naturaltime(
     value: Annotated[
         dt.datetime | dt.timedelta | float,
-        doc("A `datetime`, a `timedelta`, or a number of seconds."),
+        Doc("A `datetime`, a `timedelta`, or a number of seconds."),
     ],
     future: Annotated[
         bool,
-        doc(
+        Doc(
             "Ignored for `datetime`s and `timedelta`s, where the tense is always "
             "figured out based on the current  time. For integers and floats, the "
             "return value will be past tense by default, unless future is `True`."
@@ -232,15 +240,15 @@ def naturaltime(
     ] = False,
     months: Annotated[
         bool,
-        doc(
+        Doc(
             "If `True`, then a number of months (based on 30.5 days) "
             "will be used for fuzziness between years."
         ),
     ] = True,
-    minimum_unit: Annotated[str, doc("The lowest unit that can be used.")] = "seconds",
+    minimum_unit: Annotated[str, Doc("The lowest unit that can be used.")] = "seconds",
     when: Annotated[
         dt.datetime | None,
-        doc(
+        Doc(
             "Point in time relative to which _value_ is interpreted. "
             "Defaults to the current time in the local timezone."
         ),

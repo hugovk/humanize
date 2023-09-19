@@ -5,7 +5,15 @@ import math
 import re
 import sys
 from fractions import Fraction
-from typing import TYPE_CHECKING, Annotated, doc
+from typing import TYPE_CHECKING
+
+try:
+    from typing import Annotated, Doc  # type: ignore[attr-defined]
+except ImportError:
+    from typing_extensions import (  # type: ignore[attr-defined,assignment]
+        Annotated,
+        Doc,
+    )
 
 from .i18n import _gettext as _
 from .i18n import _ngettext
@@ -36,9 +44,9 @@ def _format_not_finite(value: float) -> str:
 
 
 def ordinal(
-    value: Annotated[NumberOrString, doc("Integer to convert.")],
+    value: Annotated[NumberOrString, Doc("Integer to convert.")],
     gender: Annotated[
-        str, doc('Gender for translations. Accepts either "male" or "female".')
+        str, Doc('Gender for translations. Accepts either "male" or "female".')
     ] = "male",
 ) -> str:
     """Converts an integer to its ordinal as a string.
@@ -110,9 +118,9 @@ def ordinal(
 
 
 def intcomma(
-    value: Annotated[NumberOrString, doc("Integer or float to convert.")],
+    value: Annotated[NumberOrString, Doc("Integer or float to convert.")],
     ndigits: Annotated[
-        int | None, doc("Digits of precision for rounding after the decimal point.")
+        int | None, Doc("Digits of precision for rounding after the decimal point.")
     ] = None,
 ) -> str:
     """Converts an integer to a string containing commas every three digits.
@@ -191,10 +199,10 @@ human_powers = (
 
 
 def intword(
-    value: Annotated[NumberOrString, doc("Integer to convert.")],
+    value: Annotated[NumberOrString, Doc("Integer to convert.")],
     format: Annotated[
         str,
-        doc("To change the number of decimal or general format of the number portion."),
+        Doc("To change the number of decimal or general format of the number portion."),
     ] = "%.1f",
 ) -> str:
     """Converts a large integer to a friendly text representation.
@@ -264,7 +272,7 @@ def intword(
     return negative_prefix + str(value)
 
 
-def apnumber(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> str:
+def apnumber(value: Annotated[NumberOrString, Doc("Integer to convert.")]) -> str:
     """Converts an integer to Associated Press style.
 
     Examples:
@@ -310,7 +318,7 @@ def apnumber(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> st
     )[value]
 
 
-def fractional(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> str:
+def fractional(value: Annotated[NumberOrString, Doc("Integer to convert.")]) -> str:
     """Convert to fractional number.
 
     There will be some cases where one might not want to show ugly decimal places for
@@ -367,9 +375,9 @@ def fractional(value: Annotated[NumberOrString, doc("Integer to convert.")]) -> 
 
 
 def scientific(
-    value: Annotated[NumberOrString, doc("Input number.")],
+    value: Annotated[NumberOrString, Doc("Input number.")],
     precision: Annotated[
-        int, doc("Number of decimal for first part of the number.")
+        int, Doc("Number of decimal for first part of the number.")
     ] = 2,
 ) -> str:
     """Return number in string scientific notation z.wq x 10ⁿ.
@@ -433,21 +441,21 @@ def scientific(
 
 
 def clamp(
-    value: Annotated[float, doc("Input number.")],
+    value: Annotated[float, Doc("Input number.")],
     format: Annotated[
         str,
-        doc(
+        Doc(
             "Can either be a formatting string, "
             "or a callable function that receives value and returns a string."
         ),
     ] = "{:}",
-    floor: Annotated[float | None, doc("Smallest value before clamping.")] = None,
-    ceil: Annotated[float | None, doc("Largest value before clamping.")] = None,
+    floor: Annotated[float | None, Doc("Smallest value before clamping.")] = None,
+    ceil: Annotated[float | None, Doc("Largest value before clamping.")] = None,
     floor_token: Annotated[
-        str, doc("If value is smaller than floor, token will be prepended to output.")
+        str, Doc("If value is smaller than floor, token will be prepended to output.")
     ] = "<",
     ceil_token: Annotated[
-        str, doc("If value is larger than ceil, token will be prepended to output.")
+        str, Doc("If value is larger than ceil, token will be prepended to output.")
     ] = ">",
 ) -> str:
     """Returns number with the specified format, clamped between floor and ceil.
@@ -507,10 +515,10 @@ def clamp(
 
 
 def metric(
-    value: Annotated[float, doc("Input number.")],
-    unit: Annotated[str, doc("Optional base unit.")] = "",
+    value: Annotated[float, Doc("Input number.")],
+    unit: Annotated[str, Doc("Optional base unit.")] = "",
     precision: Annotated[
-        int, doc("The number of digits the output should contain.")
+        int, Doc("The number of digits the output should contain.")
     ] = 3,
 ) -> str:
     """Return a value with a metric SI unit-prefix appended.

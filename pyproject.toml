@@ -36,6 +36,9 @@ classifiers = [
 dynamic = [
   "version",
 ]
+dependencies = [
+  "typing-extensions>=4.8",
+]
 [project.optional-dependencies]
 tests = [
   "freezegun",
